@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Reactive.Bindings.Extensions;
 
-namespace SimpleVoiceReliverService
+namespace SimpleVoiceDeliverService
 {
     /// <summary>
     /// 音声発信クライアント
@@ -19,8 +19,8 @@ namespace SimpleVoiceReliverService
         private readonly CompositeDisposable _disposable;
 
         private IObservable<Tuple<WebSocketReceiveResult, byte[]>> ReceiveObservable { get; }
-        private Subject<Tuple<string, byte[]>> SoundSubject { get; } = new Subject<Tuple<string, byte[]>>();
-        private Subject<Tuple<string, string>> TextSubject { get; } = new Subject<Tuple<string, string>>();
+        private Subject<Tuple<VoiceSpeakClient, byte[]>> SoundSubject { get; } = new Subject<Tuple<VoiceSpeakClient, byte[]>>();
+        private Subject<Tuple<VoiceSpeakClient, string>> TextSubject { get; } = new Subject<Tuple<VoiceSpeakClient, string>>();
         private Subject<VoiceSpeakClient> CloseSubject { get; } = new Subject<VoiceSpeakClient>();
         /// <summary>
         /// ウェブソケットコンテキスト
@@ -33,11 +33,11 @@ namespace SimpleVoiceReliverService
         /// <summary>
         /// 音声Observable
         /// </summary>
-        public IObservable<Tuple<string, byte[]>> SoundObservable => SoundSubject;
+        public IObservable<Tuple<VoiceSpeakClient, byte[]>> SoundObservable => SoundSubject;
         /// <summary>
         /// テキストObservable
         /// </summary>
-        public IObservable<Tuple<string, string>> TextObservable => TextSubject;
+        public IObservable<Tuple<VoiceSpeakClient, string>> TextObservable => TextSubject;
         /// <summary>
         /// クローズObservable
         /// </summary>
@@ -66,10 +66,10 @@ namespace SimpleVoiceReliverService
                 switch (x.Item1.MessageType)
                 {
                     case WebSocketMessageType.Binary:
-                        SoundSubject.OnNext(Tuple.Create(channel, x.Item2));
+                        SoundSubject.OnNext(Tuple.Create(this, x.Item2));
                         break;
                     case WebSocketMessageType.Text:
-                        TextSubject.OnNext(Tuple.Create(channel, Encoding.ASCII.GetString(x.Item2)));
+                        TextSubject.OnNext(Tuple.Create(this, Encoding.ASCII.GetString(x.Item2)));
                         break;
                     case WebSocketMessageType.Close:
                         SoundSubject.OnCompleted();

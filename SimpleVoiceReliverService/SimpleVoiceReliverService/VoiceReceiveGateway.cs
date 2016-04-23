@@ -4,17 +4,34 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Net.WebSockets;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using Reactive.Bindings.Extensions;
+using SimpleVoiceReliverService;
 
-namespace SimpleVoiceReliverService
+namespace SimpleVoiceDeliverService
 {
     /// <summary>
     ///     音声データ受信ゲートウェイ
     /// </summary>
     public class VoiceReceiveGateway
     {
-        private readonly ObservableCollection<VoiceSpeakClient> _clients = new ObservableCollection<VoiceSpeakClient>();
+        private readonly ObservableCollection<Tuple<VoiceSpeakClient, IDisposable>> _clients = new ObservableCollection<Tuple<VoiceSpeakClient, IDisposable>>();
         private readonly object _clientsLock = new object();
+
+        private Func<IReadOnlyList<string>> GetChannels { get; }
+        private HttpListener Listner { get; }
+        private IObservable<HttpListenerContext> ConnectObservable { get; }
+        private IDisposable ConnectDisposable { get; set; }
+
+        private Subject<Tuple<VoiceSpeakClient, byte[]>> VoiceSubject { get; } = new Subject<Tuple<VoiceSpeakClient, byte[]>>();
+        private Subject<Tuple<VoiceSpeakClient, string>> TextSubject { get; } = new Subject<Tuple<VoiceSpeakClient, string>>();
+
+        /// <summary>
+        /// 音声Observable
+        /// </summary>
+        public IObservable<Tuple<VoiceSpeakClient, byte[]>> VoiceObservable => VoiceSubject;
 
         /// <summary>
         ///     コンストラクタ
@@ -36,13 +53,7 @@ namespace SimpleVoiceReliverService
                 ;
 
             GetChannels = channelsFunc;
-        }
-        
-        private Func<IReadOnlyList<string>> GetChannels { get; }
-        private HttpListener Listner { get; }
-
-        private IObservable<HttpListenerContext> ConnectObservable { get; }
-        private IDisposable ConnectDisposable { get; set; }
+        }             
 
         /// <summary>
         ///     ゲートウェイ開始
@@ -60,6 +71,12 @@ namespace SimpleVoiceReliverService
         {
             ConnectDisposable?.Dispose();
             Listner.Stop();
+            lock (_clientsLock)
+            {
+                _clients.ToList().ForEach(x => x.Item2.Dispose());
+                _clients.Clear();
+            }
+            VoiceSubject.OnCompleted();
         }
 
         private void Connect(HttpListenerContext context)
@@ -88,7 +105,21 @@ namespace SimpleVoiceReliverService
             var client = new VoiceSpeakClient(context, channel);
             lock (_clientsLock)
             {
-                _clients.Add(client);                
+                var disposable = new CompositeDisposable();
+                client.SoundObservable.Subscribe(VoiceSubject).AddTo(disposable);
+                client.TextObservable.Subscribe(TextSubject).AddTo(disposable);
+                client.CloseObservable.Subscribe(x =>
+                {
+                    lock (_clientsLock)
+                    {
+                        _clients
+                        .Where(y => y.Item1.Equals(x))
+                        .ToList()
+                        .ForEach(y => _clients.Remove(y));
+                    }
+                });
+                disposable.Add(client);
+                _clients.Add(new Tuple<VoiceSpeakClient, IDisposable>(client, new CompositeDisposable()));                
             }
         }
     }
