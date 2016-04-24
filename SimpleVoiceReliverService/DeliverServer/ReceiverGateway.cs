@@ -19,10 +19,10 @@ namespace DeliverServer
         private readonly HttpListener _listener;
         private CompositeDisposable _disposable;
 
-        public ReceiverGateway(Func<HttpListenerContext, AuthResult> authFunc, HttpListener listener, IObservable<SenderModel> voiceObservable, params string[] prefixes)
+        public ReceiverGateway(Func<HttpListenerContext, AuthResult> authFunc, IObservable<SenderModel> voiceObservable, params string[] prefixes)
         {
             _authFunc = authFunc;
-            _listener = listener;
+            _listener = new HttpListener();
             _voiceObservable = voiceObservable;
 
             foreach (var prefix in prefixes)
@@ -45,8 +45,8 @@ namespace DeliverServer
         {
             if (_listener.IsListening) return;
             _disposable = new CompositeDisposable();
-            _connectObservable.Subscribe(async x => await Accept(x)).AddTo(_disposable);
             _listener.Start();
+            _connectObservable.Subscribe(async x => await Accept(x)).AddTo(_disposable);            
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace DeliverServer
                 var authResult = _authFunc(context);
                 if (authResult.Result)
                 {
-                    var websocketContext = await context.AcceptWebSocketAsync(string.Empty);
+                    var websocketContext = await context.AcceptWebSocketAsync(null);
                     var client = new ReceiverClient(websocketContext, authResult.Channel);
                     _voiceObservable.Subscribe(client);
                     return;

@@ -11,10 +11,11 @@ namespace DeliverServer
     /// <summary>
     ///     データ配信ゲートウェイ
     /// </summary>
-    public class SenderGateway
+    public class SenderGateway : IObservable<SenderModel>
     {
         private readonly Func<HttpListenerContext, AuthResult> _authFunc;
         private readonly IObservable<HttpListenerContext> _connectObservable;
+        private readonly Subject<SenderModel> _senderSubject = new Subject<SenderModel>();
         private readonly HttpListener _listener;
         private CompositeDisposable _disposable;
 
@@ -39,9 +40,7 @@ namespace DeliverServer
                 .Publish()
                 .RefCount()
                 ;
-        }
-
-        private Subject<SenderModel> SenderSubject { get; } = new Subject<SenderModel>();
+        }        
 
         /// <summary>
         ///     ゲートウェイ開始
@@ -49,9 +48,9 @@ namespace DeliverServer
         public void Start()
         {
             if (_listener.IsListening) return;
-            _disposable = new CompositeDisposable();
-            _connectObservable.Subscribe(async x => await Accept(x)).AddTo(_disposable);
+            _disposable = new CompositeDisposable();            
             _listener.Start();
+            _connectObservable.Subscribe(async x => await Accept(x)).AddTo(_disposable);
         }
 
         /// <summary>
@@ -62,7 +61,7 @@ namespace DeliverServer
             if (!_listener.IsListening) return;
             _disposable.Dispose();
             _disposable = null;
-            SenderSubject.OnCompleted();
+            _senderSubject.OnCompleted();
             _listener.Stop();
         }
 
@@ -73,14 +72,20 @@ namespace DeliverServer
                 var authResult = _authFunc(context);
                 if (authResult.Result)
                 {
-                    var websocketContext = await context.AcceptWebSocketAsync(string.Empty);
+                    var websocketContext = await context.AcceptWebSocketAsync(null);
                     var client = new SenderClient(websocketContext, authResult.Channel);
-                    client.Subscribe(SenderSubject.OnNext);
+                    client.Subscribe(_senderSubject.OnNext);
                     return;
                 }
             }
             context.Response.StatusCode = (int) HttpStatusCode.BadRequest;
             context.Response.Close();
         }
+
+
+        /// <summary>オブザーバーが通知を受け取ることをプロバイダーに通知します。</summary>
+        /// <returns>プロバイダーが通知の送信を完了する前に、オブザーバーが通知の受信を停止できるインターフェイスへの参照。</returns>
+        /// <param name="observer">通知を受け取るオブジェクト。</param>
+        public IDisposable Subscribe(IObserver<SenderModel> observer) => _senderSubject.Subscribe(observer);
     }
 }
