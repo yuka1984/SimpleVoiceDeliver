@@ -1,0 +1,251 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{AC12FC33-7134-48EB-82F9-4E672A25AA7B}</ProjectGuid>
+    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NSpeex.Silverlight</RootNamespace>
+    <AssemblyName>NSpeex.Silverlight</AssemblyName>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>false</SilverlightApplication>
+    <ValidateXaml>true</ValidateXaml>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
+  </PropertyGroup>
+  <!-- This property group is only here to support building this project using the 
+       MSBuild 3.5 toolset. In order to work correctly with this older toolset, it needs 
+       to set the TargetFrameworkVersion to v3.5 -->
+  <PropertyGroup Condition="'$(MSBuildToolsVersion)' == '3.5'">
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
+    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
+    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
+    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
+    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
+    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
+    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
+    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
+    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
+    <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
+    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
+    <CodeContractsEmitXMLDocs>False</CodeContractsEmitXMLDocs>
+    <CodeContractsCustomRewriterAssembly />
+    <CodeContractsCustomRewriterClass />
+    <CodeContractsLibPaths />
+    <CodeContractsPlatformPath />
+    <CodeContractsExtraAnalysisOptions />
+    <CodeContractsBaseLineFile />
+    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
+    <CodeContractsReferenceAssembly>%28none%29</CodeContractsReferenceAssembly>
+    <CodeContractsContainerAnalysis>False</CodeContractsContainerAnalysis>
+    <CodeContractsExtraRewriteOptions />
+    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\Bin\Release\</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\Bin\Release\NSpeex.Silverlight.XML</DocumentationFile>
+    <CodeContractsEnableRuntimeChecking>False</CodeContractsEnableRuntimeChecking>
+    <CodeContractsRuntimeOnlyPublicSurface>True</CodeContractsRuntimeOnlyPublicSurface>
+    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
+    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
+    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
+    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
+    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
+    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
+    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
+    <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
+    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
+    <CodeContractsEmitXMLDocs>False</CodeContractsEmitXMLDocs>
+    <CodeContractsCustomRewriterAssembly />
+    <CodeContractsCustomRewriterClass />
+    <CodeContractsLibPaths />
+    <CodeContractsPlatformPath />
+    <CodeContractsExtraAnalysisOptions />
+    <CodeContractsBaseLineFile />
+    <CodeContractsRuntimeCheckingLevel>Preconditions</CodeContractsRuntimeCheckingLevel>
+    <CodeContractsReferenceAssembly>%28none%29</CodeContractsReferenceAssembly>
+    <CodeContractsContainerAnalysis>False</CodeContractsContainerAnalysis>
+    <CodeContractsExtraRewriteOptions />
+    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System.Windows" />
+    <Reference Include="system" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Windows.Browser" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\NSpeex\AudioFileWriter.cs">
+      <Link>AudioFileWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\BandMode.cs">
+      <Link>BandMode.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\Bits.cs">
+      <Link>Bits.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\CodebookSearch.cs">
+      <Link>CodebookSearch.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\Codebook_Constants.cs">
+      <Link>Codebook_Constants.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\Filters.cs">
+      <Link>Filters.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\HighLspQuant.cs">
+      <Link>HighLspQuant.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\IDecoder.cs">
+      <Link>IDecoder.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\IEncoder.cs">
+      <Link>IEncoder.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\Inband.cs">
+      <Link>Inband.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\InvalidFormatException.cs">
+      <Link>InvalidFormatException.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\JitterBuffer.cs">
+      <Link>JitterBuffer.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\LbrLspQuant.cs">
+      <Link>LbrLspQuant.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\Lpc.cs">
+      <Link>Lpc.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\Lsp.cs">
+      <Link>Lsp.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\LspQuant.cs">
+      <Link>LspQuant.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\Ltp.cs">
+      <Link>Ltp.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\Ltp3Tap.cs">
+      <Link>Ltp3Tap.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\LtpForcedPitch.cs">
+      <Link>LtpForcedPitch.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\Misc.cs">
+      <Link>Misc.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\NbCodec.cs">
+      <Link>NbCodec.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\NbDecoder.cs">
+      <Link>NbDecoder.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\NbEncoder.cs">
+      <Link>NbEncoder.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\NbLspQuant.cs">
+      <Link>NbLspQuant.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\NoiseSearch.cs">
+      <Link>NoiseSearch.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\OggCrc.cs">
+      <Link>OggCrc.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\OggSpeexWriter.cs">
+      <Link>OggSpeexWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\PcmWaveWriter.cs">
+      <Link>PcmWaveWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\RawWriter.cs">
+      <Link>RawWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\SbCodec.cs">
+      <Link>SbCodec.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\SbDecoder.cs">
+      <Link>SbDecoder.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\SbEncoder.cs">
+      <Link>SbEncoder.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\SpeexDecoder.cs">
+      <Link>SpeexDecoder.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\SpeexEncoder.cs">
+      <Link>SpeexEncoder.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\SplitShapeSearch.cs">
+      <Link>SplitShapeSearch.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\Stereo.cs">
+      <Link>Stereo.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\SubMode.cs">
+      <Link>SubMode.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\Vbr.cs">
+      <Link>Vbr.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\VQ.cs">
+      <Link>VQ.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
+        <SilverlightProjectProperties />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

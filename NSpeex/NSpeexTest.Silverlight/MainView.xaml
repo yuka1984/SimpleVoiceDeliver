@@ -1,0 +1,41 @@
+﻿<UserControl
+    x:Class="NSpeexTest.Silverlight.MainView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:vms="clr-namespace:NSpeexTest.Silverlight" mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+    <UserControl.DataContext>
+        <vms:MainViewModel />
+    </UserControl.DataContext>
+    <Grid x:Name="LayoutRoot" Background="Silver">
+        <Border
+            BorderBrush="Silver"
+            BorderThickness="2"
+            CornerRadius="3"
+            Margin="24,24,24,0">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Margin="0,0,15,0">Send:</TextBlock>
+                    <Button Name="StartButton" Command="{Binding StartCommand}">Play</Button>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock>Listener:</TextBlock>
+                    <TextBox Text="{Binding ListenAddress}" Width="250"/>
+                    <Button Command="{Binding ListenCommand}">Listen</Button>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock>Audio Devices:</TextBlock>
+                    <ComboBox ItemsSource="{Binding AudioDevices}" SelectedItem="{Binding SelectedAudioDevice}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding FriendlyName}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7AC96E0D-9415-4332-AF62-BD3390D5E7A8}</ProjectGuid>
+    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>NSpeex</RootNamespace>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <AssemblyName>NSpeex.Touch</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Xamarin.iOS" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\NSpeex\AudioFileWriter.cs">
+      <Link>AudioFileWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\BandMode.cs">
+      <Link>BandMode.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\Bits.cs">
+      <Link>Bits.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\CodebookSearch.cs">
+      <Link>CodebookSearch.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\Codebook_Constants.cs">
+      <Link>Codebook_Constants.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\Filters.cs">
+      <Link>Filters.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\HighLspQuant.cs">
+      <Link>HighLspQuant.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\IDecoder.cs">
+      <Link>IDecoder.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\IEncoder.cs">
+      <Link>IEncoder.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\Inband.cs">
+      <Link>Inband.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\InvalidFormatException.cs">
+      <Link>InvalidFormatException.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\JitterBuffer.cs">
+      <Link>JitterBuffer.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\LbrLspQuant.cs">
+      <Link>LbrLspQuant.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\Lpc.cs">
+      <Link>Lpc.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\Lsp.cs">
+      <Link>Lsp.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\LspQuant.cs">
+      <Link>LspQuant.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\Ltp.cs">
+      <Link>Ltp.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\Ltp3Tap.cs">
+      <Link>Ltp3Tap.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\LtpForcedPitch.cs">
+      <Link>LtpForcedPitch.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\Misc.cs">
+      <Link>Misc.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\NbCodec.cs">
+      <Link>NbCodec.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\NbDecoder.cs">
+      <Link>NbDecoder.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\NbEncoder.cs">
+      <Link>NbEncoder.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\NbLspQuant.cs">
+      <Link>NbLspQuant.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\NoiseSearch.cs">
+      <Link>NoiseSearch.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\OggCrc.cs">
+      <Link>OggCrc.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\OggSpeexWriter.cs">
+      <Link>OggSpeexWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\PcmWaveWriter.cs">
+      <Link>PcmWaveWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\RawWriter.cs">
+      <Link>RawWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\SbCodec.cs">
+      <Link>SbCodec.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\SbDecoder.cs">
+      <Link>SbDecoder.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\SbEncoder.cs">
+      <Link>SbEncoder.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\SpeexDecoder.cs">
+      <Link>SpeexDecoder.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\SpeexEncoder.cs">
+      <Link>SpeexEncoder.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\SplitShapeSearch.cs">
+      <Link>SplitShapeSearch.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\Stereo.cs">
+      <Link>Stereo.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\SubMode.cs">
+      <Link>SubMode.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\Vbr.cs">
+      <Link>Vbr.cs</Link>
+    </Compile>
+    <Compile Include="..\NSpeex\VQ.cs">
+      <Link>VQ.cs</Link>
+    </Compile>
+    <Compile Include="Class1.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
+</Project>
