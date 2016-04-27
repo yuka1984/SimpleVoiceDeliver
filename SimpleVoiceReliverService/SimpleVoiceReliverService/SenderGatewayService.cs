@@ -12,10 +12,13 @@ namespace SimpleVoiceDeliverService
     public class SenderGatewayService : IService
     {
         private readonly SenderGateway _senderGateway;
+        private readonly ObservableListenerServer _server;
 
         public SenderGatewayService()
         {
-            _senderGateway = new SenderGateway(Auth, "http://*:81/");
+            _server = new ObservableListenerServer("http://*:81/");
+            _senderGateway = new SenderGateway(Auth);            
+
             _senderGateway.Subscribe(x =>
             {
                 Console.Out.WriteLineAsync(
@@ -28,14 +31,17 @@ namespace SimpleVoiceDeliverService
             return new AuthResult(true, "TestChannel");
         }
 
+        private IDisposable dispose;
         public void Start()
         {
-            _senderGateway.Start();
+            _server.Start();
+            dispose = _server.Subscribe(_senderGateway);
         }
 
         public void Stop()
         {
-            _senderGateway.Stop();
+            dispose.Dispose();
+            _server.Stop();
         }
     }
 }

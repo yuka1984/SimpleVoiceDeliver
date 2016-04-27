@@ -1,82 +1,58 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.WebSockets;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Reactive.Bindings.Extensions;
+using System.Reactive.Subjects;
 
 namespace DeliverServer
 {
-    public class ReceiverGateway
+    public class ReceiverGateway : IObserver<HttpListenerContext>, IObserver<SenderModel>
     {
         private readonly Func<HttpListenerContext, AuthResult> _authFunc;
-        private readonly IObservable<HttpListenerContext> _connectObservable;
-        private IObservable<SenderModel> _voiceObservable;
-        private readonly HttpListener _listener;
-        private CompositeDisposable _disposable;
 
-        public ReceiverGateway(Func<HttpListenerContext, AuthResult> authFunc, IObservable<SenderModel> voiceObservable, params string[] prefixes)
+        private readonly Subject<SenderModel> _sendSubject = new Subject<SenderModel>();
+
+        public ReceiverGateway(Func<HttpListenerContext, AuthResult> authFunc)
         {
             _authFunc = authFunc;
-            _listener = new HttpListener();
-            _voiceObservable = voiceObservable;
+        }
 
-            foreach (var prefix in prefixes)
+        async void IObserver<HttpListenerContext>.OnNext(HttpListenerContext context)
+        {
+            var authResult = _authFunc(context);
+            if (authResult.Result)
             {
-                _listener.Prefixes.Add(prefix);
+                var websocketContext = await context.AcceptWebSocketAsync(null);
+                var client = new ReceiverClient(websocketContext, authResult.Channel);
+                _sendSubject.Subscribe(client);
             }
-            _connectObservable = Observable
-                .FromAsync(_listener.GetContextAsync)
-                .Repeat()
-                .Retry()
-                .Publish()
-                .RefCount()
-                ;
-        }
-
-        /// <summary>
-        /// ゲートウェイ開始
-        /// </summary>
-        public void Start()
-        {
-            if (_listener.IsListening) return;
-            _disposable = new CompositeDisposable();
-            _listener.Start();
-            _connectObservable.Subscribe(async x => await Accept(x)).AddTo(_disposable);            
-        }
-
-        /// <summary>
-        /// ゲートウェイ停止
-        /// </summary>
-        public void Stop()
-        {
-            if (!_listener.IsListening) return;
-            _disposable.Dispose();
-            _disposable = null;
-            _listener.Stop();
-        }
-
-        private async Task Accept(HttpListenerContext context)
-        {
-            if (context.Request.IsWebSocketRequest)
+            else
             {
-                var authResult = _authFunc(context);
-                if (authResult.Result)
-                {
-                    var websocketContext = await context.AcceptWebSocketAsync(null);
-                    var client = new ReceiverClient(websocketContext, authResult.Channel);
-                    _voiceObservable.Subscribe(client);
-                    return;
-                }
+                context.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
+                context.Response.Close();
             }
-            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-            context.Response.Close();
         }
 
+        void IObserver<HttpListenerContext>.OnError(Exception error)
+        {
+        }
 
+        void IObserver<HttpListenerContext>.OnCompleted()
+        {
+            _sendSubject.OnCompleted();
+        }
+
+        public void OnNext(SenderModel value)
+        {
+            _sendSubject.OnNext(value);
+        }
+
+        public void OnError(Exception error)
+        {
+            _sendSubject.OnError(error);
+        }
+
+        public void OnCompleted()
+        {
+            _sendSubject.OnCompleted();
+        }
     }
 }

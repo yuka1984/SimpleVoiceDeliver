@@ -75,7 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AuthResult.cs" />
-    <Compile Include="ListenerServerObservable.cs" />
+    <Compile Include="ObservableListenerServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReceiverClient.cs" />
     <Compile Include="ReceiverGateway.cs" />

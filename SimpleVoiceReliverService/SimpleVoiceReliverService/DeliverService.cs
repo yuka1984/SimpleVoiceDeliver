@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Reactive.Disposables;
 using System.Text;
 using System.Threading.Tasks;
 using DeliverServer;
+using Reactive.Bindings.Extensions;
 
 namespace SimpleVoiceDeliverService
 {
@@ -12,16 +14,24 @@ namespace SimpleVoiceDeliverService
     {
         private readonly SenderGateway _senderGateway;
         private readonly ReceiverGateway _receiverGataway;
+        private readonly ObservableListenerServer _senderSerer;
+        private readonly ObservableListenerServer _receiverServer;
+        private CompositeDisposable _dispose;
 
         public DeliverService()
         {
-            _senderGateway = new SenderGateway(Auth, "http://*:81/");
+            _senderSerer = new ObservableListenerServer("http://*:81/");
+            _senderGateway = new SenderGateway(Auth);
             _senderGateway.Subscribe(x =>
             {
                 Console.Out.WriteLineAsync(
                     $"{x.Channel} IsBinary:{x.IsBinary} IsClose:{x.IsClose} {string.Join("-", x.ReceiveData.Select(y => y.ToString("x2")))}");
             });
-            _receiverGataway = new ReceiverGateway(Auth, _senderGateway, "http://*:82/");
+            
+
+            _receiverServer = new ObservableListenerServer("http://*:82/");
+            _receiverGataway = new ReceiverGateway(Auth);
+            
         }
 
         private AuthResult Auth(HttpListenerContext context)
@@ -31,14 +41,22 @@ namespace SimpleVoiceDeliverService
 
         public void Start()
         {
-            _senderGateway.Start();
-            _receiverGataway.Start();
+            _dispose = new CompositeDisposable();
+            _senderSerer.Start();
+            _receiverServer.Start();
+
+            _senderSerer.Subscribe(_senderGateway).AddTo(_dispose);
+            _receiverServer.Subscribe(_receiverGataway).AddTo(_dispose);
+            _senderGateway.Subscribe(_receiverGataway).AddTo(_dispose);
+
         }
 
         public void Stop()
         {
-            _senderGateway.Stop();
-            _receiverGataway.Stop();
+            _senderSerer.Stop();
+            _receiverServer.Stop();
+
+            _dispose.Dispose();
         }
     }
 }

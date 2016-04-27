@@ -12,16 +12,18 @@ namespace SimpleVoiceDeliverService
     public class ReceiverGatawayService : IService
     {
         private readonly ReceiverGateway _gateway;
+        private readonly ObservableListenerServer _server;
 
         public ReceiverGatawayService()
         {
+            _server = new ObservableListenerServer("http://*:81/");
             var timer = Observable.Interval(TimeSpan.FromMilliseconds(100))
                 .Select(x => new SenderModel("TestChannel", false, Encoding.ASCII.GetBytes(x.ToString())))
                 .Publish()
                 ;
-            timer.Connect();
-                           
-            _gateway = new ReceiverGateway(Auth, timer, "http://*:81/");
+            timer.Connect();                           
+            _gateway = new ReceiverGateway(Auth);
+            timer.Subscribe(_gateway);            
         }
 
         private AuthResult Auth(HttpListenerContext context)
@@ -29,14 +31,17 @@ namespace SimpleVoiceDeliverService
             return new AuthResult(true, "TestChannel");
         }
 
+        private IDisposable dispose;
         public void Start()
         {
-            _gateway.Start();
+            _server.Start();
+            dispose = _server.Subscribe(_gateway);
         }
 
         public void Stop()
         {
-            _gateway.Stop();
+            dispose.Dispose();
+            _server.Stop();
         }
     }
 }

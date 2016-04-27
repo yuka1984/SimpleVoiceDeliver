@@ -11,14 +11,14 @@ using Reactive.Bindings.Extensions;
 
 namespace DeliverServer
 {
-    public class ListenerServerObservable : IObservable<HttpListenerContext>
+    public class ObservableListenerServer : IObservable<HttpListenerContext>
     {
         private readonly HttpListener _listener = new HttpListener();
         private readonly IObservable<HttpListenerContext> _connectObservable;
         private readonly Subject<HttpListenerContext> _subject = new Subject<HttpListenerContext>();
         private CompositeDisposable _disposable;
 
-        public ListenerServerObservable(params string[] prefixes)
+        public ObservableListenerServer(params string[] prefixes)
         {
             foreach (var prefix in prefixes)
             {
