@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Net;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Threading.Tasks;
-using Reactive.Bindings.Extensions;
 
 namespace DeliverServer
 {
@@ -24,7 +20,7 @@ namespace DeliverServer
         public SenderGateway(Func<HttpListenerContext, AuthResult> authFunc)
         {
             _authFunc = authFunc;
-        }                
+        }
 
         /// <summary>オブザーバーが通知を受け取ることをプロバイダーに通知します。</summary>
         /// <returns>プロバイダーが通知の送信を完了する前に、オブザーバーが通知の受信を停止できるインターフェイスへの参照。</returns>
@@ -33,7 +29,7 @@ namespace DeliverServer
 
         /// <summary>オブザーバーに新しいデータを提供します。</summary>
         /// <param name="value">現在の通知情報。</param>
-        public　async void OnNext(HttpListenerContext context)
+        public async void OnNext(HttpListenerContext context)
         {
             var authResult = _authFunc(context);
             if (authResult.Result)
@@ -44,7 +40,7 @@ namespace DeliverServer
             }
             else
             {
-                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                context.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
                 context.Response.Close();
             }
         }

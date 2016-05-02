@@ -1,12 +1,12 @@
 namespace DeliverServer
 {
     /// <summary>
-    /// 送信データモデル
+    ///     送信データモデル
     /// </summary>
     public class SenderModel
     {
         /// <summary>
-        /// コンストラクタ
+        ///     コンストラクタ
         /// </summary>
         /// <param name="channel">チャンネル</param>
         /// <param name="isBinary">バイナリデータフラグ</param>
@@ -21,22 +21,22 @@ namespace DeliverServer
         }
 
         /// <summary>
-        /// 切断フラグ
+        ///     切断フラグ
         /// </summary>
         public bool IsClose { get; }
 
         /// <summary>
-        /// バイナリデータフラグ
+        ///     バイナリデータフラグ
         /// </summary>
         public bool IsBinary { get; }
 
         /// <summary>
-        /// チャンネル識別
+        ///     チャンネル識別
         /// </summary>
-        public string Channel { get;  }
+        public string Channel { get; }
 
         /// <summary>
-        /// 受信データ
+        ///     受信データ
         /// </summary>
         public byte[] ReceiveData { get; }
     }

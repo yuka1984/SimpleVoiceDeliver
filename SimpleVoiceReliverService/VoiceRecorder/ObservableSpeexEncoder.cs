@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Reactive.Subjects;
 using NAudio.Wave;
 using NSpeex;
@@ -10,13 +9,17 @@ namespace VoiceRecorder
     {
         private readonly SpeexEncoder _encoder;
 
-        private readonly WaveBuffer encoderInputBuffer;
+        private readonly WaveBuffer _encoderInputBuffer;
         private readonly Subject<byte[]> _encodeSubject = new Subject<byte[]>();
 
-        public ObservableSpeexEncoder(int bufferSize)
+        public ObservableSpeexEncoder(int bufferSize) : this(bufferSize, BandMode.Narrow)
         {
-            _encoder = new SpeexEncoder(BandMode.Narrow);
-            encoderInputBuffer = new WaveBuffer(bufferSize);
+        }
+
+        public ObservableSpeexEncoder(int bufferSize, BandMode mode)
+        {
+            _encoder = new SpeexEncoder(mode);
+            _encoderInputBuffer = new WaveBuffer(bufferSize);
         }
 
         IDisposable IObservable<byte[]>.Subscribe(IObserver<byte[]> observer) => _encodeSubject.Subscribe(observer);
@@ -39,34 +42,34 @@ namespace VoiceRecorder
         private byte[] Encode(byte[] data, int offset, int length)
         {
             FeedSamplesIntoEncoderInputBuffer(data, offset, length);
-            var samplesToEncode = encoderInputBuffer.ShortBufferCount;
+            var samplesToEncode = _encoderInputBuffer.ShortBufferCount;
             if (samplesToEncode%_encoder.FrameSize != 0)
             {
                 samplesToEncode -= samplesToEncode%_encoder.FrameSize;
             }
             var outputBufferTemp = new byte[length]; // contains more than enough space
-            var bytesWritten = _encoder.Encode(encoderInputBuffer.ShortBuffer, 0, samplesToEncode, outputBufferTemp, 0,
+            var bytesWritten = _encoder.Encode(_encoderInputBuffer.ShortBuffer, 0, samplesToEncode, outputBufferTemp, 0,
                 length);
             var encoded = new byte[bytesWritten];
             Array.Copy(outputBufferTemp, 0, encoded, 0, bytesWritten);
             ShiftLeftoverSamplesDown(samplesToEncode);
             //Debug.WriteLine(
-                //$"NSpeex: In {length} bytes, encoded {bytesWritten} bytes [enc frame size = {_encoder.FrameSize}]");
+            //$"NSpeex: In {length} bytes, encoded {bytesWritten} bytes [enc frame size = {_encoder.FrameSize}]");
             return encoded;
         }
 
         private void ShiftLeftoverSamplesDown(int samplesEncoded)
         {
-            var leftoverSamples = encoderInputBuffer.ShortBufferCount - samplesEncoded;
-            Array.Copy(encoderInputBuffer.ByteBuffer, samplesEncoded*2, encoderInputBuffer.ByteBuffer, 0,
+            var leftoverSamples = _encoderInputBuffer.ShortBufferCount - samplesEncoded;
+            Array.Copy(_encoderInputBuffer.ByteBuffer, samplesEncoded*2, _encoderInputBuffer.ByteBuffer, 0,
                 leftoverSamples*2);
-            encoderInputBuffer.ShortBufferCount = leftoverSamples;
+            _encoderInputBuffer.ShortBufferCount = leftoverSamples;
         }
 
         private void FeedSamplesIntoEncoderInputBuffer(byte[] data, int offset, int length)
         {
-            Array.Copy(data, offset, encoderInputBuffer.ByteBuffer, encoderInputBuffer.ByteBufferCount, length);
-            encoderInputBuffer.ByteBufferCount += length;
+            Array.Copy(data, offset, _encoderInputBuffer.ByteBuffer, _encoderInputBuffer.ByteBufferCount, length);
+            _encoderInputBuffer.ByteBufferCount += length;
         }
     }
 }

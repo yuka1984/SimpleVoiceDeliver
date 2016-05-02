@@ -1,23 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.WebSockets;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace DeliverServer
 {
     /// <summary>
-    /// データ受信クライアント
+    ///     データ受信クライアント
     /// </summary>
     public class ReceiverClient : IObserver<SenderModel>
     {
-        private WebSocketContext Context { get; }
-        private string Channel { get; }
-
         /// <summary>
-        /// コンストラクタ
+        ///     コンストラクタ
         /// </summary>
         /// <param name="context"></param>
         /// <param name="channel"></param>
@@ -27,12 +20,15 @@ namespace DeliverServer
             Channel = channel;
         }
 
+        private WebSocketContext Context { get; }
+        private string Channel { get; }
+
         /// <summary>オブザーバーに新しいデータを提供します。</summary>
         /// <param name="value">現在の通知情報。</param>
         public async void OnNext(SenderModel value)
         {
-            if(value.Channel != this.Channel) return;
-            if(Context.WebSocket.State != WebSocketState.Open) return;
+            if (value.Channel != Channel) return;
+            if (Context.WebSocket.State != WebSocketState.Open) return;
 
             if (value.IsClose)
             {
@@ -44,8 +40,8 @@ namespace DeliverServer
                     new ArraySegment<byte>(value.ReceiveData),
                     value.IsBinary ? WebSocketMessageType.Binary : WebSocketMessageType.Text
                     , true,
-                   CancellationToken.None);
-            }            
+                    CancellationToken.None);
+            }
         }
 
         /// <summary>プロバイダーでエラー状態が発生したことをオブザーバーに通知します。</summary>
@@ -59,7 +55,7 @@ namespace DeliverServer
         public async void OnCompleted()
         {
             await Context.WebSocket.CloseAsync(WebSocketCloseStatus.EndpointUnavailable, "SenderClose",
-                    CancellationToken.None);
+                CancellationToken.None);
             Context.WebSocket.Abort();
         }
     }

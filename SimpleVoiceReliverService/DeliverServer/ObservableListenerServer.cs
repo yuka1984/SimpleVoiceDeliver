@@ -1,20 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Text;
-using System.Threading.Tasks;
-using Reactive.Bindings.Extensions;
 
 namespace DeliverServer
 {
     public class ObservableListenerServer : IObservable<HttpListenerContext>
     {
-        private readonly HttpListener _listener = new HttpListener();
         private readonly IObservable<HttpListenerContext> _connectObservable;
+        private readonly HttpListener _listener = new HttpListener();
         private readonly Subject<HttpListenerContext> _subject = new Subject<HttpListenerContext>();
         private CompositeDisposable _disposable;
 
@@ -40,6 +35,16 @@ namespace DeliverServer
                 ;
         }
 
+        public IDisposable Subscribe(IObserver<HttpListenerContext> observer)
+        {
+            if (_listener.IsListening)
+            {
+                return _connectObservable.Subscribe(observer);
+            }
+            observer.OnCompleted();
+            return Disposable.Empty;
+        }
+
         public void Start()
         {
             _disposable = new CompositeDisposable();
@@ -49,19 +54,6 @@ namespace DeliverServer
         public void Stop()
         {
             _listener.Stop();
-        }
-
-        public IDisposable Subscribe(IObserver<HttpListenerContext> observer)
-        {
-            if (_listener.IsListening)
-            {
-                return _connectObservable.Subscribe(observer);
-            }
-            else
-            {
-                observer.OnCompleted();
-                return Disposable.Empty;
-            }
         }
     }
 }

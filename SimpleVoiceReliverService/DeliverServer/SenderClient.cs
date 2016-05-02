@@ -36,7 +36,8 @@ namespace DeliverServer
                     if (x.Item1.MessageType == WebSocketMessageType.Close)
                     {
                         SenderSubject
-                            .OnNext(new SenderModel(channel, x.Item1.MessageType == WebSocketMessageType.Binary, x.Item2, true));
+                            .OnNext(new SenderModel(channel, x.Item1.MessageType == WebSocketMessageType.Binary, x.Item2,
+                                true));
                         SenderSubject.OnCompleted();
                     }
                     else

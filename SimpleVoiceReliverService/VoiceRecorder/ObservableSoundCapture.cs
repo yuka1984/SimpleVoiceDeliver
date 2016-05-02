@@ -7,11 +7,13 @@ using Reactive.Bindings.Extensions;
 
 namespace VoiceRecorder
 {
+    /// <summary>
+    ///     録音Observable
+    /// </summary>
     public class ObservableSoundCapture : IObservable<byte[]>, IDisposable
     {
         private readonly Subject<byte[]> _avaibleSubject = new Subject<byte[]>();
         private readonly CompositeDisposable _compositeDisposable = new CompositeDisposable();
-        public IWaveIn WaveIn { get; }
 
         public ObservableSoundCapture() : this(new WaveInEvent {BufferMilliseconds = 250, NumberOfBuffers = 1})
         {
@@ -46,6 +48,8 @@ namespace VoiceRecorder
             _compositeDisposable.Add(WaveIn);
             _compositeDisposable.Add(_avaibleSubject);
         }
+
+        public IWaveIn WaveIn { get; }
 
         public bool IsRunning { get; private set; }
 

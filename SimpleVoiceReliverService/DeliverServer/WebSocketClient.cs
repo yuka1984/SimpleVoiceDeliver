@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.WebSockets;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -12,15 +10,25 @@ namespace DeliverServer
 {
     public class WebSocketClient : IObservable<byte[]>, IObservable<string>
     {
-        private ClientWebSocket client;
         private const int BufferSize = 64000;
         private readonly byte[] _buffer = new byte[BufferSize];
-        private Subject<string> textSubjet = new Subject<string>();
-        private Subject<byte[]> binarySubjet = new Subject<byte[]>();
+        private readonly Subject<byte[]> binarySubjet = new Subject<byte[]>();
+        private readonly ClientWebSocket client;
+        private readonly Subject<string> textSubjet = new Subject<string>();
 
         public WebSocketClient()
         {
             client = new ClientWebSocket();
+        }
+
+        IDisposable IObservable<byte[]>.Subscribe(IObserver<byte[]> observer)
+        {
+            return binarySubjet.Subscribe(observer);
+        }
+
+        IDisposable IObservable<string>.Subscribe(IObserver<string> observer)
+        {
+            return textSubjet.Subscribe(observer);
         }
 
         public async Task Start()
@@ -49,20 +57,10 @@ namespace DeliverServer
                     binarySubjet.OnCompleted();
                 }
             });
-
         }
 
-        IDisposable IObservable<string>.Subscribe(IObserver<string> observer)
-        {
-            return textSubjet.Subscribe(observer);
-        }
-
-        IDisposable IObservable<byte[]>.Subscribe(IObserver<byte[]> observer)
-        {
-            return binarySubjet.Subscribe(observer);
-        }
-
-        public static async Task<Tuple<WebSocketReceiveResult, byte[]>> ReceiveAsync(ClientWebSocket webSocket, byte[] buffer)
+        public static async Task<Tuple<WebSocketReceiveResult, byte[]>> ReceiveAsync(ClientWebSocket webSocket,
+            byte[] buffer)
         {
             var resultCount = 0;
             while (true)
