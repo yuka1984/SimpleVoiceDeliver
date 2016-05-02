@@ -13,7 +13,7 @@ namespace VoiceRecorder
         private readonly CompositeDisposable _compositeDisposable = new CompositeDisposable();
         public IWaveIn WaveIn { get; }
 
-        public ObservableSoundCapture() : this(new WaveInEvent {BufferMilliseconds = 20, NumberOfBuffers = 1})
+        public ObservableSoundCapture() : this(new WaveInEvent {BufferMilliseconds = 250, NumberOfBuffers = 1})
         {
         }
 

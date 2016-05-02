@@ -82,6 +82,7 @@
     <Compile Include="SenderClient.cs" />
     <Compile Include="SenderGateway.cs" />
     <Compile Include="SenderModel.cs" />
+    <Compile Include="WebSocketClient.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

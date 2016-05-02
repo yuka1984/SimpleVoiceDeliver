@@ -103,6 +103,10 @@
       <Project>{e8cf3ffe-7f30-4f68-9a38-1af5f1bda3f2}</Project>
       <Name>DeliverServer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\VoiceRecorder\VoiceRecorder.csproj">
+      <Project>{d3c8d58d-03ed-425d-acd8-4148f603be8a}</Project>
+      <Name>VoiceRecorder</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -4,15 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D3C8D58D-03ED-425D-ACD8-4148F603BE8A}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{1215553B-4E22-457D-A146-57BE0AC9F56E}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VoiceRecorder</RootNamespace>
-    <AssemblyName>VoiceRecorder</AssemblyName>
+    <RootNamespace>ClientTest</RootNamespace>
+    <AssemblyName>ClientTest</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -78,19 +81,21 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ObservableSoundCapture.cs" />
-    <Compile Include="ObserverSoundSpeaker.cs" />
-    <Compile Include="ObserverSpeexDecoder.cs" />
-    <Compile Include="ObservableSpeexEncoder.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NSpeex\NSpeex.csproj">
-      <Project>{b084cd9f-263f-4106-b049-a244ab880b05}</Project>
-      <Name>NSpeex</Name>
+    <ProjectReference Include="..\DeliverServer\DeliverServer.csproj">
+      <Project>{e8cf3ffe-7f30-4f68-9a38-1af5f1bda3f2}</Project>
+      <Name>DeliverServer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VoiceRecorder\VoiceRecorder.csproj">
+      <Project>{d3c8d58d-03ed-425d-acd8-4148f603be8a}</Project>
+      <Name>VoiceRecorder</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
