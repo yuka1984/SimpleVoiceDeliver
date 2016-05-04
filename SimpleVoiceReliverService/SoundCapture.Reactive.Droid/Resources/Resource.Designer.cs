@@ -9,9 +9,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: global::Android.Runtime.ResourceDesignerAttribute("SoundCapture.Reactive.Droid.Resource", IsApplication=false)]
+[assembly: global::Android.Runtime.ResourceDesignerAttribute("SoundCapture.Reactive.Resource", IsApplication=false)]
 
-namespace SoundCapture.Reactive.Droid
+namespace SoundCapture.Reactive
 {
 	
 	

@@ -14,7 +14,7 @@ using Android.Views;
 using Android.Widget;
 using NUnit.Framework;
 
-namespace SoundCapture.Reactive.Droid.Test
+namespace SoundCapture.Reactive
 {
     [TestFixture]
     public class SoundCaptureTest

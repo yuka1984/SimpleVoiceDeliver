@@ -10,9 +10,9 @@ using Android.Media;
 
 [assembly: UsesPermission(Manifest.Permission.RecordAudio)]
 
-namespace SoundCapture.Reactive.Droid
+namespace SoundCapture.Reactive
 {
-    public class SoundCapture : IObservable<byte[]>, IDisposable
+    public class SoundCapture : ISoundCapture, IDisposable
     {
         private readonly short[] _buffer;
         private bool _isrecording;

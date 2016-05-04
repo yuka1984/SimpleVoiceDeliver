@@ -112,6 +112,10 @@
       <Project>{f527eacc-4c07-4f42-bb6b-0fe396e48416}</Project>
       <Name>SoundCapture.Reactive.Droid</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SoundCapture.Reactive.Pcl\SoundCapture.Reactive.Pcl.csproj">
+      <Project>{23bd4695-1870-4f9a-b573-19173f2accc2}</Project>
+      <Name>SoundCapture.Reactive.Pcl</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -32,8 +32,8 @@ namespace SoundCapture.Reactive.Droid.Test
 			global::NSpeex.Reactive.Resource.String.Hello = global::SoundCapture.Reactive.Droid.Test.Resource.String.Hello;
 			global::Reactive.Bindings.Resource.String.ApplicationName = global::SoundCapture.Reactive.Droid.Test.Resource.String.ApplicationName;
 			global::Reactive.Bindings.Resource.String.Hello = global::SoundCapture.Reactive.Droid.Test.Resource.String.Hello;
-			global::SoundCapture.Reactive.Droid.Resource.String.ApplicationName = global::SoundCapture.Reactive.Droid.Test.Resource.String.ApplicationName;
-			global::SoundCapture.Reactive.Droid.Resource.String.Hello = global::SoundCapture.Reactive.Droid.Test.Resource.String.Hello;
+			global::SoundCapture.Reactive.Resource.String.ApplicationName = global::SoundCapture.Reactive.Droid.Test.Resource.String.ApplicationName;
+			global::SoundCapture.Reactive.Resource.String.Hello = global::SoundCapture.Reactive.Droid.Test.Resource.String.Hello;
 			global::Xamarin.Android.NUnitLite.Resource.Id.OptionHostName = global::SoundCapture.Reactive.Droid.Test.Resource.Id.OptionHostName;
 			global::Xamarin.Android.NUnitLite.Resource.Id.OptionPort = global::SoundCapture.Reactive.Droid.Test.Resource.Id.OptionPort;
 			global::Xamarin.Android.NUnitLite.Resource.Id.OptionRemoteServer = global::SoundCapture.Reactive.Droid.Test.Resource.Id.OptionRemoteServer;
