@@ -147,6 +147,49 @@ namespace NSpeex
             return samplesDecoded;
         }
 
+        /// <summary>
+        /// Decodes the given encoded data.
+        /// </summary>
+        /// <param name="inData">The encoded data. Can be multiple frames.</param>
+        /// <param name="inOffset">Start offset where to read the encoded data from.</param>
+        /// <param name="inCount">The number of bytes to decode.</param>
+        /// <param name="outData">The output of the decoded data in samples.</param>
+        /// <param name="outOffset">Start offset where to start writing the decoded samples from.</param>
+        /// <param name="lostFrame">Indicates if we are decoding a lost frame. Alternatively the <paramref name="inData"/> parameter can be <value>null</value>.</param>
+        /// <returns>The number of samples decoded.</returns>
+        public unsafe int Decode(byte[] inData, int inOffset, int inCount, short* outData, int outDataLength, int outOffset, bool lostFrame)
+        {
+            if (decodedData.Length < outDataLength * 2)
+            {
+                // resize the decoded data buffer
+                decodedData = new float[outDataLength * 2];
+            }
+
+            if (lostFrame || inData == null)
+            {
+                decoder.Decode(null, decodedData);
+                for (int i = 0; i < frameSize; i++, outOffset++)
+                {
+                    outData[outOffset] = ConvertToShort(decodedData[i]);
+                }
+                return frameSize;
+            }
+
+            bits.ReadFrom(inData, inOffset, inCount);
+            int samplesDecoded = 0;
+            while (decoder.Decode(bits, decodedData) == 0)
+            {
+                for (int i = 0; i < frameSize; i++, outOffset++)
+                {
+
+                    outData[outOffset] = ConvertToShort(decodedData[i]);
+                }
+                samplesDecoded += frameSize;
+            }
+
+            return samplesDecoded;
+        }
+
 
         private static short ConvertToShort(float value)
         {

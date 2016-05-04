@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net.WebSockets;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -8,55 +9,78 @@ using System.Threading.Tasks;
 
 namespace DeliverServer
 {
-    public class WebSocketClient : IObservable<byte[]>, IObservable<string>
+    public class WebSocketClient : IObserver<SenderModel>,  IObservable<byte[]>, IObservable<string>, IDisposable
     {
         private const int BufferSize = 64000;
+        private readonly Subject<byte[]> _binarySubjet = new Subject<byte[]>();
         private readonly byte[] _buffer = new byte[BufferSize];
-        private readonly Subject<byte[]> binarySubjet = new Subject<byte[]>();
-        private readonly ClientWebSocket client;
-        private readonly Subject<string> textSubjet = new Subject<string>();
+        private readonly ClientWebSocket _client;
+        private readonly Subject<string> _textSubjet = new Subject<string>();
+        private readonly Uri _uri;
+        private IDisposable _receiveDisposable;
 
-        public WebSocketClient()
+        public WebSocketClient(Uri uri)
         {
-            client = new ClientWebSocket();
+            _client = new ClientWebSocket();
+            _uri = uri;
+        }
+
+        public bool IsConnected { get; private set; }
+
+        public void Dispose()
+        {
+            _client?.Dispose();
+            if (IsConnected)
+            {
+                _receiveDisposable.Dispose();
+            }
+            _binarySubjet.Dispose();
+            _textSubjet.Dispose();
         }
 
         IDisposable IObservable<byte[]>.Subscribe(IObserver<byte[]> observer)
         {
-            return binarySubjet.Subscribe(observer);
+            return _binarySubjet.Subscribe(observer);
         }
 
         IDisposable IObservable<string>.Subscribe(IObserver<string> observer)
         {
-            return textSubjet.Subscribe(observer);
+            return _textSubjet.Subscribe(observer);
         }
 
         public async Task Start()
         {
-            await client.ConnectAsync(new Uri("ws://localhost:81/"), CancellationToken.None);
-
-            var receiveObservable = Observable.FromAsync(() => ReceiveAsync(client, _buffer))
+            if (IsConnected) return;
+            await _client.ConnectAsync(_uri, CancellationToken.None);
+            _receiveDisposable = Observable.FromAsync(() => ReceiveAsync(_client, _buffer))
                 .Repeat()
                 .Publish()
                 .RefCount()
-                ;
+                .Subscribe(x =>
+                {
+                    if (x.Item1.MessageType == WebSocketMessageType.Text)
+                    {
+                        _textSubjet.OnNext(Encoding.ASCII.GetString(x.Item2));
+                    }
+                    else if (x.Item1.MessageType == WebSocketMessageType.Binary)
+                    {
+                        _binarySubjet.OnNext(x.Item2);
+                    }
+                    else
+                    {
+                        _textSubjet.OnCompleted();
+                        _binarySubjet.OnCompleted();
+                    }
+                });
+            IsConnected = true;
+        }
 
-            receiveObservable.Subscribe(x =>
-            {
-                if (x.Item1.MessageType == WebSocketMessageType.Text)
-                {
-                    textSubjet.OnNext(Encoding.ASCII.GetString(x.Item2));
-                }
-                else if (x.Item1.MessageType == WebSocketMessageType.Binary)
-                {
-                    binarySubjet.OnNext(x.Item2);
-                }
-                else
-                {
-                    textSubjet.OnCompleted();
-                    binarySubjet.OnCompleted();
-                }
-            });
+        public async Task Stop()
+        {
+            if (!IsConnected) return;
+            _receiveDisposable.Dispose();
+            await _client.CloseAsync(WebSocketCloseStatus.Empty, string.Empty, CancellationToken.None);
+            IsConnected = false;
         }
 
         public static async Task<Tuple<WebSocketReceiveResult, byte[]>> ReceiveAsync(ClientWebSocket webSocket,
@@ -80,6 +104,39 @@ namespace DeliverServer
                     return Tuple.Create(result, resultbuffer);
                 }
             }
+        }
+
+        void IObserver<SenderModel>.OnNext(SenderModel value)
+        {
+            if (!IsConnected) return;
+            if (value.IsClose)
+            {
+                _client.CloseAsync(WebSocketCloseStatus.Empty, "", CancellationToken.None);
+            }
+            else
+            {
+                try
+                {
+                    _client.SendAsync(new ArraySegment<byte>(value.ReceiveData),
+                        value.IsBinary ? WebSocketMessageType.Binary : WebSocketMessageType.Text
+                        , true,
+                        CancellationToken.None);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                }
+            }
+        }
+
+        void IObserver<SenderModel>.OnError(Exception error)
+        {
+            _client.CloseAsync(WebSocketCloseStatus.InternalServerError, "", CancellationToken.None);
+        }
+
+        void IObserver<SenderModel>.OnCompleted()
+        {
+            _client.CloseAsync(WebSocketCloseStatus.Empty, "", CancellationToken.None);
         }
     }
 }

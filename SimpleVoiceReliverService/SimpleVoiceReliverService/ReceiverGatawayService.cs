@@ -36,7 +36,7 @@ namespace SimpleVoiceDeliverService
 
         private AuthResult Auth(HttpListenerContext context)
         {
-            return new AuthResult(true, "TestChannel");
+            return new AuthResult(true, "TestChannel", ClientType.Receiver);
         }
 
         private IDisposable dispose;

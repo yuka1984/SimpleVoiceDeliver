@@ -17,7 +17,7 @@ namespace ClientTest
         {
             ManualResetEventSlim re = new ManualResetEventSlim();
 
-            var client = new WebSocketClient();
+            var client = new WebSocketClient(new Uri("ws://localhost:81/"));
             var decoder = new ObserverSpeexDecoder();
             var speaker = new ObserverSoundSpeaker(new WaveOutEvent(), new WaveFormat(8000, 16, 1));
             decoder.Subscribe(speaker);

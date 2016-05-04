@@ -21,7 +21,7 @@ namespace SimpleVoiceDeliverService
         public DeliverService()
         {
             _senderSerer = new ObservableListenerServer("http://*:81/");
-            _senderGateway = new SenderGateway(Auth);
+            _senderGateway = new SenderGateway(SenderAuth);
             _senderGateway.Subscribe(x =>
             {
                 Console.Out.WriteLineAsync(
@@ -30,13 +30,17 @@ namespace SimpleVoiceDeliverService
             
 
             _receiverServer = new ObservableListenerServer("http://*:82/");
-            _receiverGataway = new ReceiverGateway(Auth);
+            _receiverGataway = new ReceiverGateway(ReceiverAuth);
             
         }
 
-        private AuthResult Auth(HttpListenerContext context)
+        private AuthResult SenderAuth(HttpListenerContext context)
         {
-            return new AuthResult(true, "TestChannel");
+            return new AuthResult(true, "TestChannel", ClientType.Sender);
+        }
+        private AuthResult ReceiverAuth(HttpListenerContext context)
+        {
+            return new AuthResult(true, "TestChannel", ClientType.Receiver);
         }
 
         public void Start()

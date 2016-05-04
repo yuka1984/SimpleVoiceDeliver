@@ -4,7 +4,7 @@ using System.Reactive.Subjects;
 
 namespace DeliverServer
 {
-    public class ReceiverGateway : IObserver<HttpListenerContext>, IObserver<SenderModel>
+    public class ReceiverGateway : IObserver<HttpListenerContext>, IObserver<SenderModel>, IDisposable
     {
         private readonly Func<HttpListenerContext, AuthResult> _authFunc;
 
@@ -22,7 +22,8 @@ namespace DeliverServer
             {
                 var websocketContext = await context.AcceptWebSocketAsync(null);
                 var client = new ReceiverClient(websocketContext, authResult.Channel);
-                _sendSubject.Subscribe(client);
+                var dispose = _sendSubject.Subscribe(client);
+                client.CloseDisposable = dispose;
             }
             else
             {
@@ -53,6 +54,11 @@ namespace DeliverServer
         public void OnCompleted()
         {
             _sendSubject.OnCompleted();
+        }
+
+        public void Dispose()
+        {
+            _sendSubject?.Dispose();
         }
     }
 }

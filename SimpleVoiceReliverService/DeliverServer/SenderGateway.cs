@@ -7,7 +7,7 @@ namespace DeliverServer
     /// <summary>
     ///     データ配信ゲートウェイ
     /// </summary>
-    public class SenderGateway : IObserver<HttpListenerContext>, IObservable<SenderModel>
+    public class SenderGateway : IObserver<HttpListenerContext>, IObservable<SenderModel>, IDisposable
     {
         private readonly Func<HttpListenerContext, AuthResult> _authFunc;
         private readonly Subject<SenderModel> _senderSubject = new Subject<SenderModel>();
@@ -56,6 +56,11 @@ namespace DeliverServer
         public void OnCompleted()
         {
             _senderSubject.OnCompleted();
+        }
+
+        public void Dispose()
+        {
+            _senderSubject.Dispose();
         }
     }
 }

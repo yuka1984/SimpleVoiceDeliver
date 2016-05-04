@@ -16,7 +16,7 @@ namespace SimpleVoiceReliverService
             {
                 x.Service<IService>(s =>
                 {
-                    s.ConstructUsing(name => new ReceiverGatawayService());
+                    s.ConstructUsing(name => new DeliverService());
                     s.WhenStarted(tc => tc.Start());
                     s.WhenStopped(tc => tc.Stop());
                 });

@@ -21,7 +21,7 @@ class Greeter {
         this.reader = new FileReader();
         this.reader.onload = () => this.fileonLoad();
         this.decoder = new SpeexDecoder(BandMode.Narrow);
-        this.socket = new WebSocket("ws://localhost:81/");
+        this.socket = new WebSocket("ws://localhost:82/");
         this.socket.onmessage = (message) => this.onmessage(message);
         this.audioCotext = new AudioContext();
         this.waiting = true;

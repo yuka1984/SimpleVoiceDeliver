@@ -16,7 +16,7 @@ namespace DeliverServer
         private readonly byte[] _buffer = new byte[BufferSize];
 
         /// <summary>
-        ///     コンストラクタ
+        /// コンストラクタ
         /// </summary>
         /// <param name="context"></param>
         /// <param name="channel"></param>

@@ -10,10 +10,12 @@ namespace DeliverServer
         /// </summary>
         /// <param name="result"></param>
         /// <param name="channel"></param>
-        public AuthResult(bool result, string channel)
+        /// <param name="type"></param>
+        public AuthResult(bool result, string channel, ClientType type)
         {
             Result = result;
             Channel = channel;
+            Type = type;
         }
 
         /// <summary>
@@ -21,9 +23,24 @@ namespace DeliverServer
         /// </summary>
         public bool Result { get; }
 
+        
+
         /// <summary>
         ///     接続チャンネル
         /// </summary>
         public string Channel { get; }
+
+        /// <summary>
+        /// クライアントタイプ
+        /// </summary>
+        public ClientType Type { get; }
+    }
+
+    /// <summary>
+    /// クライアントタイプ
+    /// </summary>
+    public enum ClientType
+    {
+        Sender, Receiver
     }
 }

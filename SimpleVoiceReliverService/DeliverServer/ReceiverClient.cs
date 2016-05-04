@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net.WebSockets;
 using System.Threading;
 
@@ -7,8 +8,13 @@ namespace DeliverServer
     /// <summary>
     ///     データ受信クライアント
     /// </summary>
-    public class ReceiverClient : IObserver<SenderModel>
+    public class ReceiverClient : IObserver<SenderModel>, IDisposable
     {
+        /// <summary>
+        /// クローズ時に実行されるDisposable
+        /// </summary>
+        public IDisposable CloseDisposable { get; set; }
+
         /// <summary>
         ///     コンストラクタ
         /// </summary>
@@ -28,7 +34,16 @@ namespace DeliverServer
         public async void OnNext(SenderModel value)
         {
             if (value.Channel != Channel) return;
-            if (Context.WebSocket.State != WebSocketState.Open) return;
+            if (Context.WebSocket.State != WebSocketState.Open)
+            {
+                CloseDisposable?.Dispose();
+                CloseDisposable = null;
+                if (Context.WebSocket.State == WebSocketState.CloseReceived)
+                {
+                    await Context.WebSocket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
+                }
+                return;
+            }
 
             if (value.IsClose)
             {
@@ -36,11 +51,19 @@ namespace DeliverServer
             }
             else
             {
-                await Context.WebSocket.SendAsync(
+                try
+                {
+                    await Context.WebSocket.SendAsync(
                     new ArraySegment<byte>(value.ReceiveData),
                     value.IsBinary ? WebSocketMessageType.Binary : WebSocketMessageType.Text
                     , true,
-                    CancellationToken.None);
+                    CancellationToken.None); 
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);                    
+                }
+                
             }
         }
 
@@ -57,6 +80,11 @@ namespace DeliverServer
             await Context.WebSocket.CloseAsync(WebSocketCloseStatus.EndpointUnavailable, "SenderClose",
                 CancellationToken.None);
             Context.WebSocket.Abort();
+        }
+
+        public void Dispose()
+        {
+            CloseDisposable?.Dispose();
         }
     }
 }
