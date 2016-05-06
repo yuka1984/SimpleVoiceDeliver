@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reactive.Subjects;
-
+    
 namespace NSpeex.Reactive
 {
     /// <summary>
