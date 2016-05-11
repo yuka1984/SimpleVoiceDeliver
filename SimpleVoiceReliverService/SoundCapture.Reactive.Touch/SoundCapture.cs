@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Reactive.Subjects;
 using System.Runtime.InteropServices;
 using AudioToolbox;
+using AVFoundation;
+using Foundation;
 
 namespace SoundCapture.Reactive
 {
@@ -36,8 +38,8 @@ namespace SoundCapture.Reactive
             audioQueue = new InputAudioQueue(description);
             for (var i = 0; i < 3; i++)
             {
-                IntPtr ptr;
-                audioQueue.AllocateBuffer(pushsize, out ptr);
+                var ptr = IntPtr.Zero;
+                audioQueue.AllocateBufferWithPacketDescriptors(pushsize*description.BytesPerPacket, pushsize, out ptr);
                 audioQueue.EnqueueBuffer(ptr, pushsize, null);
                 bufferPtrs.Add(ptr);
             }
@@ -62,7 +64,11 @@ namespace SoundCapture.Reactive
         public void Start()
         {
             if (_isrecording) return;
-            audioQueue.Start();
+            var status = audioQueue.Start();
+            if (status != AudioQueueStatus.Ok)
+            {
+                throw new Exception(status.ToString());
+            }
             _isrecording = true;
         }
 
@@ -75,10 +81,13 @@ namespace SoundCapture.Reactive
 
         private void AudioQueueOnInputCompleted(object sender, InputCompletedEventArgs args)
         {
-            var sound = new byte[pushsize];
-            Marshal.Copy(args.IntPtrBuffer, sound, 0, sound.Length);
-            _subject.OnNext(sound);
-            audioQueue.EnqueueBuffer(args.IntPtrBuffer, pushsize, null);
+            var buffer = (AudioQueueBuffer)Marshal.PtrToStructure(args.IntPtrBuffer, typeof(AudioQueueBuffer));
+            var send = new byte[buffer.AudioDataByteSize];
+            Marshal.Copy(buffer.AudioData, send, 0, (int)buffer.AudioDataByteSize);
+            _subject.OnNext(send);
+
+            var status = audioQueue.EnqueueBuffer(args.IntPtrBuffer, this.pushsize, args.PacketDescriptions);
+
         }
     }
 }
